@@ -23,8 +23,8 @@ I started this project because I was bored and thought, "Why not try to beat thi
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/what-beats-rock.git
-    cd what-beats-rock
+    git clone https://github.com/Kongfha/What_Beats_Rock_Solver.git
+    cd What_Beats_Rock_Solver
     ```
 
 2. Create a virtual environment and activate it:
