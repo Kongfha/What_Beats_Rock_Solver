@@ -49,31 +49,48 @@ This project automates the process of playing the "What Beats Rock?" game using 
 
 ## Algorithm
 
-The algorithm used to build the longest chain of words is as follows:
+The algorithm builds the longest chain of words in the "What Beats Rock?" game using the following steps:
 
 1. **Initialization**:
-    - Load the vocabulary from the CSV file.
+    - Load the vocabulary \( V \) from `Extracted_Nouns.csv`.
     - Initialize the WebDriver and navigate to the game website.
-    - Start the chain with the word "rock".
+    - Set the starting chain \( C \) to \(["rock"]\) and mark "rock" as used.
 
 2. **Chain Building**:
-    - Randomly pick a candidate word from the vocabulary that hasn't been used.
-    - Query the game to see if the current word beats the candidate word.
-    - If successful, extend the chain with the candidate word and mark it as used.
-    - If unsuccessful, attempt to fallback to a previous word in the chain that can beat "rock".
+    - While \( |C| < \text{threshold} \):
+        - Randomly select a candidate \( w \in V \) such that \( w \notin C \).
+        - Query the game for \( \text{last}(C) \to w \):
+            - If true: Append \( w \) to \( C \).
+            - If false: Attempt fallback.
 
 3. **Fallback Logic**:
-    - If the chain has more than one word, move backward to find a word that can beat "rock".
-    - If found, truncate the chain at that word and continue building.
-    - If not found, pick a new candidate word and continue.
+    - Traverse \( C \) backward to find a node \( w' \) such that \( w' \to \text{"rock"} \).
+    - If \( w' \) is found, truncate \( C \) to \( C[:w'] \) and continue.
+    - If no fallback is found, skip to the next candidate.
 
 4. **Termination**:
-    - The process continues until the chain reaches the specified threshold or no more candidates are available.
-    - The longest chain found is printed along with its length.
+    - Stop when \( |C| = \text{threshold} \) or no more candidates are available.
+    - Output \( C \) as the longest chain found.
 
 ## Time Complexity
 
-The time complexity of the algorithm is influenced by the number of words in the vocabulary and the threshold value. In the worst case, the algorithm may need to query the game for each word in the vocabulary multiple times, leading to a time complexity of O(n * t), where n is the number of words in the vocabulary and t is the threshold value. However, due to the randomness and fallback logic, the actual time complexity may vary.
+Let \( n \) be the number of words in the vocabulary and \( t \) the threshold:
+
+1. **Chain Extension**:
+    - For each successful query, the algorithm performs \( O(1) \) work to append to \( C \).
+    - Worst case: \( O(n) \) queries for all words in \( V \).
+
+2. **Fallback Logic**:
+    - On failure, up to \( O(t) \) queries are performed in the worst-case backward traversal of \( C \).
+    - Worst-case fallback cost per failure: \( O(t) \).
+
+3. **Total Cost**:
+    - In the worst case, all \( n \) words are queried, and each fallback requires \( O(t) \) checks.
+    - Total: \( O(n \times t) \).
+
+**Expected Performance**:
+- Random candidate selection and early successes reduce fallback costs.
+- Practical complexity is closer to \( O(n) \) for moderate \( t \) (e.g., 200).
 
 ## Example Output
 
