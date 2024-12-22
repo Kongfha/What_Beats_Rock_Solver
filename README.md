@@ -1,6 +1,10 @@
-# What Beats Rock?
-
+# What Beats Rock? Solver
 This project automates the process of playing the "What Beats Rock?" game using Selenium WebDriver. The goal is to find the longest possible chain of words where each word beats the previous one, starting from the word "rock".
+## Introduction
+
+I started this project because I was bored and thought, "Why not try to beat this ridiculous but fun game, 'What Beats Rock?'" Instead of guessing words myself, I figured I’d let some code do the work for me. And here we are.
+
+
 
 ## Project Structure
 
@@ -52,45 +56,45 @@ This project automates the process of playing the "What Beats Rock?" game using 
 The algorithm builds the longest chain of words in the "What Beats Rock?" game using the following steps:
 
 1. **Initialization**:
-    - Load the vocabulary \( V \) from `Extracted_Nouns.csv`.
+    - Load the vocabulary `V` from `Extracted_Nouns.csv`.
     - Initialize the WebDriver and navigate to the game website.
-    - Set the starting chain \( C \) to \(["rock"]\) and mark "rock" as used.
+    - Set the starting chain `C = ["rock"]` and mark "rock" as used.
 
 2. **Chain Building**:
-    - While \( |C| < \text{threshold} \):
-        - Randomly select a candidate \( w \in V \) such that \( w \notin C \).
-        - Query the game for \( \text{last}(C) \to w \):
-            - If true: Append \( w \) to \( C \).
-            - If false: Attempt fallback.
+    - While the length of the chain `len(C)` is less than the threshold:
+        - Randomly select a candidate word `w` from `V` such that `w` is not in `C`.
+        - Query the game to check if the last word in the chain beats `w`:
+            - If true, append `w` to `C`.
+            - If false, attempt fallback.
 
 3. **Fallback Logic**:
-    - Traverse \( C \) backward to find a node \( w' \) such that \( w' \to \text{"rock"} \).
-    - If \( w' \) is found, truncate \( C \) to \( C[:w'] \) and continue.
-    - If no fallback is found, skip to the next candidate.
+    - Traverse the chain `C` backward to find a node `w'` such that `w'` beats "rock."
+    - If `w'` is found, truncate `C` to remove all words after `w'` and continue.
+    - If no fallback node is found, skip to the next candidate.
 
 4. **Termination**:
-    - Stop when \( |C| = \text{threshold} \) or no more candidates are available.
-    - Output \( C \) as the longest chain found.
+    - Stop when the chain reaches the threshold length or no more candidates are available.
+    - Output the longest chain `C` found.
 
 ## Time Complexity
 
-Let \( n \) be the number of words in the vocabulary and \( t \) the threshold:
+Let `n` be the number of words in the vocabulary and `t` be the threshold:
 
 1. **Chain Extension**:
-    - For each successful query, the algorithm performs \( O(1) \) work to append to \( C \).
-    - Worst case: \( O(n) \) queries for all words in \( V \).
+    - Each query to extend the chain takes constant time, `O(1)`.
+    - In the worst case, the algorithm may query all `n` words in the vocabulary, resulting in `O(n)` total extension queries.
 
 2. **Fallback Logic**:
-    - On failure, up to \( O(t) \) queries are performed in the worst-case backward traversal of \( C \).
-    - Worst-case fallback cost per failure: \( O(t) \).
+    - On failure, the algorithm may perform up to `t` queries during a backward traversal of the chain.
+    - Worst-case fallback cost per failure is `O(t)`.
 
 3. **Total Cost**:
-    - In the worst case, all \( n \) words are queried, and each fallback requires \( O(t) \) checks.
-    - Total: \( O(n \times t) \).
+    - In the worst case, the algorithm makes `n` queries, with each failure incurring up to `t` additional fallback queries.
+    - Total complexity: `O(n * t)`.
 
 **Expected Performance**:
-- Random candidate selection and early successes reduce fallback costs.
-- Practical complexity is closer to \( O(n) \) for moderate \( t \) (e.g., 200).
+- Random candidate selection and early successes reduce the number of fallback queries.
+- For moderate threshold values (e.g., `t = 200`), practical complexity is closer to `O(n)`.
 
 ## Example Output
 
