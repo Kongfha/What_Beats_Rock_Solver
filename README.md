@@ -117,7 +117,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-- Selenium WebDriver
-- WebDriver Manager for Python
-- Pandas library
+Vocabulary sourced from [this gist](https://gist.github.com/brookhong/439618b68adbcaef6e8a).
 
